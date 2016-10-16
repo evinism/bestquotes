@@ -1,0 +1,82 @@
+<!doctype html>
+<head>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Proza+Libre:400,700" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Proza Libre', sans-serif;
+    }
+
+    .quote {
+      position: absolute;
+      height: 10px;
+    }
+
+    .quote p {
+      font-size: 20px;
+      margin: 3px 0px;
+    }
+
+    .quote span {
+      color: #aaaaaa;
+      font-weight: bold;
+    }
+
+    #quotes {
+      position: relative;
+      margin-left: 15px;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .!?'.split('');
+    const rowHeight = 70;
+
+    function toBase(num, base, minSize) {
+      accum = [];
+      do {
+        accum.unshift(num % base);
+        num = Math.floor(num / base);
+      } while(num != 0);
+      while(accum.length < minSize){
+        accum.unshift(0);
+      }
+      return accum;
+    };
+
+    function rowToQuote (row) {
+      row += 1;
+      const numOfLetters = Math.ceil(Math.log(row + 1) / Math.log(alphabet.length));
+      const stringIndex = row - alphabet.length**(numOfLetters - 1);
+      let baseArr = toBase(stringIndex, alphabet.length, numOfLetters);
+      return baseArr.map(i => alphabet[i]).join('');
+    }
+
+    function renderIndividual(row){
+      return `
+        <div class='quote' style="top: ${row * rowHeight}px;">
+          <p>&ldquo;${rowToQuote(row)}&rdquo;</p>
+          <span>&horbar; Evin Sellin</span>
+        </div>
+      `
+    }
+
+    function render(){
+      const rollover = 10;
+      const startRow = Math.max(Math.floor(window.scrollY / rowHeight) - rollover, 0);
+      const endRow = Math.floor((window.scrollY + window.innerHeight) / rowHeight) + rollover;
+      let html = "";
+      for(let i = startRow; i < endRow; i++){
+        html += renderIndividual(i);
+      }
+      $("#quotes").html(html);
+    }
+
+    $(document).ready(render);
+    $(window).scroll(render);
+  </script>
+  <h1>My Very Best Quotes</h1>
+  <div id="quotes">
+  </div>
+</body>
