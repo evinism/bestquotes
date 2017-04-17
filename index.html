@@ -63,7 +63,7 @@
     }
 
     function render(){
-      const rollover = 10;
+      const rollover = 5;
       const startRow = Math.max(Math.floor(window.scrollY / rowHeight) - rollover, 0);
       const endRow = Math.floor((window.scrollY + window.innerHeight) / rowHeight) + rollover;
       let html = "";
